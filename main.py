@@ -26,10 +26,22 @@ clock = pygame.time.Clock()
 tick = 60
 MOVEEVENT = pygame.USEREVENT+1
 SPAWNEVENT = pygame.USEREVENT+2
-# moveTimeInterval = 1000
-# spawnTimeInterval = 60000
-moveTimeInterval = 50
-spawnTimeInterval = 1000
+
+
+##### CONSTANTS #####
+moveTimeInterval = 1000         #How often the aircraft's position updates (Simulation Speed) in ms.
+                                #Setting this to a lower value (ex 50) speeds up the simulation
+
+
+spawnTimeInterval = 60000       #How often a new aircraft enters the airspace (in ms).
+                                #In real life, an aircraft enters VOMM airspace every 65 seconds (65000ms).
+
+# Uncomment these presets to Achieve a faster simulation resembling a timelapse 
+# moveTimeInterval = 50
+# spawnTimeInterval = 1300
+
+
+
 pygame.time.set_timer(MOVEEVENT, moveTimeInterval)
 pygame.time.set_timer(SPAWNEVENT, spawnTimeInterval)
 
@@ -72,6 +84,19 @@ spawnOutput = TextBox(win, 1300, 55, 50, 50, fontSize=30, colour=BLACK, textColo
 atc = ATC()
 atcActivated = True
 run = True
+paused = False
+
+def pause(paused):
+    while paused:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    paused = False
+
+    pygame.display.update();
+    clock.tick(tick)
 
 while run:
     events = pygame.event.get()
@@ -108,8 +133,14 @@ while run:
             if event.key == pygame.K_BACKSPACE and pygame.key.get_mods() & pygame.KMOD_LCTRL:
                 text_input.value = ' '.join(text_input.value.split()[:-1])
 
-            if event.key == pygame.K_t:
-                print("tttt")
+            if event.key == pygame.K_LALT:
+                atcActivated = not atcActivated
+
+            if event.key == pygame.K_ESCAPE:
+                paused = True
+                pause(paused)
+
+                # print("tttt")
                 # for ac in aircraft:
                     # if ac.callsign == "".join(text_input.value.split()[0]).upper() :
                     #     ac.drawHdg = True
@@ -121,6 +152,10 @@ while run:
     win.blit(coastline, (10, -15))
     vomm.draw(win)
     cmb.draw(win)
+
+    atcStatus = "System" if atcActivated else "User"
+    atcText = font.render("ATC controlled by: " + atcStatus, 1, WHITE)
+    win.blit(atcText, (1000, 20))
 
 
     if atcActivated:
