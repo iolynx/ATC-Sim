@@ -29,7 +29,7 @@ Commands follow OpenScope syntax.\
 Pressing `↑` loads your last sent command into the Text Bar.\
 \
 _Using `t` Spawns a temporary Heading Guidance Wheel:_\
-![image](https://github.com/user-attachments/assets/df997dd9-ea41-4bc0-b4fc-1a0ebe97d680)\
+![image](https://github.com/user-attachments/assets/df997dd9-ea41-4bc0-b4fc-1a0ebe97d680)
 
 
 ## Simulation Speed
